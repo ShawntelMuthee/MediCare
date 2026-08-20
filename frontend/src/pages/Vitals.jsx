@@ -1,33 +1,58 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Card, FormField, Button, Badge, getBmiColor, getBmiLabel, LoadingSkeleton, EmptyState } from '../components/ui';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Card, FormField, Button, Badge, getBmiColor, getBmiLabel, LoadingSkeleton, EmptyState } from '../components/UI';
 import { getAllPatients } from '../api/patients';
 import { createVitals, getVitalsByPatientId } from '../api/vitals';
 
-const initialForm = {
-  height: '',
-  weight: '',
-  visitDate: '',
-};
+const vitalsSchema = z.object({
+  patient: z.string().min(1, 'Please select a patient'),
+  height: z.preprocess((a) => parseFloat(a), z.number({ invalid_type_error: 'Must be a number' }).positive('Height must be greater than 0')),
+  weight: z.preprocess((a) => parseFloat(a), z.number({ invalid_type_error: 'Must be a number' }).positive('Weight must be greater than 0')),
+  visitDate: z.string().optional().refine((val) => !val || !isNaN(Date.parse(val)), {
+    message: 'Invalid date format',
+  }),
+});
 
 export default function Vitals({ toast }) {
+  const navigate = useNavigate();
   const [patients, setPatients] = useState([]);
-  const [selectedPatientId, setSelectedPatientId] = useState('');
-  const [form, setForm] = useState(initialForm);
-  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [vitals, setVitals] = useState([]);
   const [vitalsLoading, setVitalsLoading] = useState(false);
 
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(vitalsSchema),
+    defaultValues: {
+      patient: '',
+      height: '',
+      weight: '',
+      visitDate: '',
+    },
+  });
+
+  const selectedPatientId = watch('patient');
+  const height = watch('height');
+  const weight = watch('weight');
+
   // Live BMI calculation
   const liveBmi = useMemo(() => {
-    const h = parseFloat(form.height);
-    const w = parseFloat(form.weight);
+    const h = parseFloat(height);
+    const w = parseFloat(weight);
     if (h > 0 && w > 0) {
       return (w / ((h / 100) ** 2)).toFixed(1);
     }
     return null;
-  }, [form.height, form.weight]);
+  }, [height, weight]);
 
   // Load patients on mount
   useEffect(() => {
@@ -65,42 +90,26 @@ export default function Vitals({ toast }) {
     load();
   }, [selectedPatientId]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
-  };
-
-  const validate = () => {
-    const newErrors = {};
-    if (!selectedPatientId) newErrors.patient = 'Please select a patient';
-    const h = parseFloat(form.height);
-    const w = parseFloat(form.weight);
-    if (!form.height || isNaN(h) || h <= 0) newErrors.height = 'Height must be greater than 0';
-    if (!form.weight || isNaN(w) || w <= 0) newErrors.weight = 'Weight must be greater than 0';
-    if (form.visitDate && isNaN(Date.parse(form.visitDate))) newErrors.visitDate = 'Invalid date';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-
+  const onSubmit = async (data) => {
     setSubmitting(true);
     try {
       const payload = {
-        height: parseFloat(form.height),
-        weight: parseFloat(form.weight),
+        height: data.height,
+        weight: data.weight,
       };
-      if (form.visitDate) payload.visitDate = form.visitDate;
-      await createVitals(selectedPatientId, payload);
+      if (data.visitDate) payload.visitDate = data.visitDate;
+      const res = await createVitals(data.patient, payload);
+      
+      const newBmi = res.data.bmi;
       toast.success('Vitals Recorded', 'Patient vitals have been saved successfully.');
-      setForm(initialForm);
-      setErrors({});
-      // Refresh history
-      const res = await getVitalsByPatientId(selectedPatientId);
-      setVitals(res.data || []);
+      reset();
+      
+      // Navigate based on BMI
+      if (newBmi <= 25) {
+        setTimeout(() => navigate('/general-assessment'), 1200);
+      } else {
+        setTimeout(() => navigate('/overweight-assessment'), 1200);
+      }
     } catch (err) {
       toast.error('Error', err.message);
     } finally {
@@ -126,18 +135,13 @@ export default function Vitals({ toast }) {
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Vitals Form */}
       <Card title="Record Vitals" subtitle="Enter height and weight to calculate BMI">
-        <form onSubmit={handleSubmit} noValidate>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <FormField
               label="Select Patient"
-              name="patient"
               type="select"
-              value={selectedPatientId}
-              onChange={(e) => {
-                setSelectedPatientId(e.target.value);
-                if (errors.patient) setErrors((prev) => ({ ...prev, patient: '' }));
-              }}
-              error={errors.patient}
+              {...register('patient')}
+              error={errors.patient?.message}
               options={patientOptions}
               placeholder="Choose a patient"
               required
@@ -145,31 +149,25 @@ export default function Vitals({ toast }) {
             />
             <FormField
               label="Height (cm)"
-              name="height"
               type="number"
-              value={form.height}
-              onChange={handleChange}
-              error={errors.height}
+              {...register('height')}
+              error={errors.height?.message}
               placeholder="e.g. 175"
               required
             />
             <FormField
               label="Weight (kg)"
-              name="weight"
               type="number"
-              value={form.weight}
-              onChange={handleChange}
-              error={errors.weight}
+              {...register('weight')}
+              error={errors.weight?.message}
               placeholder="e.g. 70"
               required
             />
             <FormField
               label="Visit Date"
-              name="visitDate"
               type="date"
-              value={form.visitDate}
-              onChange={handleChange}
-              error={errors.visitDate}
+              {...register('visitDate')}
+              error={errors.visitDate?.message}
               helpText="Defaults to today if left empty"
             />
 
@@ -190,10 +188,10 @@ export default function Vitals({ toast }) {
           </div>
 
           <div className="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-slate-100">
-            <Button variant="secondary" onClick={() => { setForm(initialForm); setErrors({}); }}>
+            <Button variant="secondary" onClick={() => reset()}>
               Clear
             </Button>
-            <Button type="submit" loading={submitting}>
+            <Button type="submit" loading={submitting} disabled={submitting}>
               Save Vitals
             </Button>
           </div>
@@ -209,11 +207,6 @@ export default function Vitals({ toast }) {
             <EmptyState
               title="No vitals recorded"
               description="This patient has no vitals records yet. Use the form above to add the first record."
-              icon={
-                <svg className="w-16 h-16 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-              }
             />
           ) : (
             <div className="overflow-x-auto -mx-6 -mb-6">
