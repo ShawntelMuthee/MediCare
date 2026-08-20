@@ -1,17 +1,22 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Card from '../components/ui/Card';
-import FormField from '../components/ui/FormField';
-import Button from '../components/ui/Button';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { Card, FormField, Button } from '../components/ui';
 import { createPatient } from '../api/patients';
 
-const initialForm = {
-  firstName: '',
-  lastName: '',
-  dateOfBirth: '',
-  gender: '',
-  registrationDate: '',
-};
+const patientSchema = z.object({
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+  dateOfBirth: z.string().min(1, 'Date of birth is required').refine((val) => !isNaN(Date.parse(val)), {
+    message: 'Invalid date format',
+  }),
+  gender: z.string().min(1, 'Gender is required'),
+  registrationDate: z.string().optional().refine((val) => !val || !isNaN(Date.parse(val)), {
+    message: 'Invalid date format',
+  }),
+});
 
 const genderOptions = [
   { value: 'Male', label: 'Male' },
@@ -21,44 +26,35 @@ const genderOptions = [
 
 export default function PatientRegistration({ toast }) {
   const navigate = useNavigate();
-  const [form, setForm] = useState(initialForm);
-  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
-    }
-  };
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(patientSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      dateOfBirth: '',
+      gender: '',
+      registrationDate: '',
+    },
+  });
 
-  const validate = () => {
-    const newErrors = {};
-    if (!form.firstName.trim()) newErrors.firstName = 'First name is required';
-    if (!form.lastName.trim()) newErrors.lastName = 'Last name is required';
-    if (!form.dateOfBirth) newErrors.dateOfBirth = 'Date of birth is required';
-    else if (isNaN(Date.parse(form.dateOfBirth))) newErrors.dateOfBirth = 'Invalid date format';
-    if (!form.gender) newErrors.gender = 'Gender is required';
-    if (form.registrationDate && isNaN(Date.parse(form.registrationDate)))
-      newErrors.registrationDate = 'Invalid date format';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-
+  const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const payload = { ...form };
+      const payload = { ...data };
       if (!payload.registrationDate) delete payload.registrationDate;
-      await createPatient(payload);
-      toast.success('Patient Registered', `${form.firstName} ${form.lastName} has been successfully registered.`);
-      setForm(initialForm);
-      setErrors({});
-      setTimeout(() => navigate('/'), 1200);
+      const res = await createPatient(payload);
+      toast.success('Patient Registered', `${data.firstName} ${data.lastName} has been successfully registered.`);
+      reset();
+      
+      // Navigate to Vitals page
+      setTimeout(() => navigate('/vitals'), 1200);
     } catch (err) {
       toast.error('Registration Failed', err.message);
     } finally {
@@ -76,62 +72,54 @@ export default function PatientRegistration({ toast }) {
       </div>
 
       <Card>
-        <form onSubmit={handleSubmit} noValidate>
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <FormField
               label="First Name"
-              name="firstName"
-              value={form.firstName}
-              onChange={handleChange}
-              error={errors.firstName}
+              type="text"
+              {...register('firstName')}
+              error={errors.firstName?.message}
               placeholder="e.g. John"
               required
             />
             <FormField
               label="Last Name"
-              name="lastName"
-              value={form.lastName}
-              onChange={handleChange}
-              error={errors.lastName}
+              type="text"
+              {...register('lastName')}
+              error={errors.lastName?.message}
               placeholder="e.g. Doe"
               required
             />
             <FormField
               label="Date of Birth"
-              name="dateOfBirth"
               type="date"
-              value={form.dateOfBirth}
-              onChange={handleChange}
-              error={errors.dateOfBirth}
+              {...register('dateOfBirth')}
+              error={errors.dateOfBirth?.message}
               required
             />
             <FormField
               label="Gender"
-              name="gender"
               type="select"
-              value={form.gender}
-              onChange={handleChange}
-              error={errors.gender}
+              {...register('gender')}
+              error={errors.gender?.message}
               options={genderOptions}
               required
             />
             <FormField
               label="Registration Date"
-              name="registrationDate"
               type="date"
-              value={form.registrationDate}
-              onChange={handleChange}
-              error={errors.registrationDate}
+              {...register('registrationDate')}
+              error={errors.registrationDate?.message}
               helpText="Defaults to today if left empty"
               className="sm:col-span-2"
             />
           </div>
 
           <div className="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-slate-100">
-            <Button variant="secondary" onClick={() => { setForm(initialForm); setErrors({}); }}>
+            <Button variant="secondary" onClick={() => reset()}>
               Reset
             </Button>
-            <Button type="submit" loading={loading}>
+            <Button type="submit" loading={loading} disabled={loading}>
               Register Patient
             </Button>
           </div>

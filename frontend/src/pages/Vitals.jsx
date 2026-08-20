@@ -1,10 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import Card from '../components/ui/Card';
-import FormField from '../components/ui/FormField';
-import Button from '../components/ui/Button';
-import Badge, { getBmiColor, getBmiLabel } from '../components/ui/Badge';
-import LoadingSkeleton from '../components/ui/LoadingSkeleton';
-import EmptyState from '../components/ui/EmptyState';
+import { Card, FormField, Button, Badge, getBmiColor, getBmiLabel, LoadingSkeleton, EmptyState } from '../components/ui';
 import { getAllPatients } from '../api/patients';
 import { createVitals, getVitalsByPatientId } from '../api/vitals';
 

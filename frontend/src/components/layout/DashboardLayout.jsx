@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import ToastContainer from '../ui/Toast';
+import { ToastContainer } from '../ui';
 import { useToast } from '../../hooks/useToast';
 
 const pageTitles = {
