@@ -13,11 +13,17 @@ const client = axios.create({
 client.interceptors.response.use(
   (response) => response.data,
   (error) => {
-    const message =
-      error.response?.data?.message ||
-      error.response?.data?.errors?.[0]?.message ||
-      error.message ||
-      'An unexpected error occurred';
+    let message = error.message || 'An unexpected error occurred';
+    
+    if (error.response?.data?.error) {
+      const apiErr = error.response.data.error;
+      if (apiErr.details && apiErr.details.length > 0) {
+        message = `${apiErr.message}: ${apiErr.details.map(d => d.message).join(', ')}`;
+      } else {
+        message = apiErr.message;
+      }
+    }
+
     return Promise.reject(new Error(message));
   }
 );

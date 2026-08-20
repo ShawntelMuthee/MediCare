@@ -7,6 +7,7 @@ import PatientRegistration from './pages/PatientRegistration';
 import Vitals from './pages/Vitals';
 import OverweightAssessment from './pages/OverweightAssessment';
 import GeneralAssessment from './pages/GeneralAssessment';
+import PatientProfile from './pages/PatientProfile';
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<PatientListing toast={toast} />} />
             <Route path="/register" element={<PatientRegistration toast={toast} />} />
+            <Route path="/patients/:id" element={<PatientProfile toast={toast} />} />
             <Route path="/vitals" element={<Vitals toast={toast} />} />
             <Route path="/overweight-assessment" element={<OverweightAssessment toast={toast} />} />
             <Route path="/general-assessment" element={<GeneralAssessment toast={toast} />} />
