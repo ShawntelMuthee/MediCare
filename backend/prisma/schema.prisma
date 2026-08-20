@@ -1,0 +1,70 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Patient {
+  id               String               @id @default(uuid())
+  registrationDate DateTime             @default(now())
+  firstName        String
+  lastName         String
+  dateOfBirth      DateTime
+  gender           String
+  vitals           Vitals[]
+  overweightAssess OverweightAssessment[]
+  generalAssess    GeneralAssessment[]
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  @@index([lastName, firstName])
+  @@index([registrationDate])
+}
+
+model Vitals {
+  id        String   @id @default(uuid())
+  patientId String
+  patient   Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  visitDate DateTime @default(now())
+  height    Float    // cm
+  weight    Float    // kg
+  bmi       Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([patientId])
+  @@index([visitDate])
+}
+
+model OverweightAssessment {
+  id              String   @id @default(uuid())
+  patientId       String
+  patient         Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  visitDate       DateTime @default(now())
+  generalHealth   String
+  everBeenOnDiet  Boolean
+  comments        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([patientId])
+  @@index([visitDate])
+}
+
+model GeneralAssessment {
+  id                  String   @id @default(uuid())
+  patientId           String
+  patient             Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  visitDate           DateTime @default(now())
+  generalHealth       String
+  currentlyUsingDrugs Boolean
+  comments            String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([patientId])
+  @@index([visitDate])
+}
