@@ -1,5 +1,6 @@
 import prisma from '../config/prisma.js';
 import { AppError } from '../middleware/error.middleware.js';
+import { calculateBMI } from '../utils/bmi.util.js';
 
 export interface CreateVitalsDTO {
   visitDate?: string;
@@ -37,9 +38,8 @@ export class VitalsService {
       throw new AppError('A vitals record for this patient on this visit date already exists', 409);
     }
 
-    // Calculate BMI: weight (kg) / [height (m)]^2
-    const heightInMeters = data.height / 100;
-    const bmi = Number((data.weight / (heightInMeters * heightInMeters)).toFixed(2));
+    // Calculate BMI and recommended routing
+    const bmiResult = calculateBMI(data.height, data.weight);
 
     const vitals = await prisma.vitals.create({
       data: {
@@ -47,11 +47,14 @@ export class VitalsService {
         visitDate,
         height: data.height,
         weight: data.weight,
-        bmi,
+        bmi: bmiResult.bmi,
       },
     });
 
-    return vitals;
+    return {
+      ...vitals,
+      bmiResult,
+    };
   }
 
   static async getVitalsByPatientId(patientId: string) {
