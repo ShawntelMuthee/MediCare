@@ -3,12 +3,12 @@ import React, { useState, useEffect, useRef } from "react";
 // --- Badge.jsx ---
 
 const colorMap = {
-  blue: 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400 border border-primary-200 dark:border-primary-800',
-  green: 'bg-success-50 dark:bg-success-900/30 text-success-700 dark:text-success-400 border border-success-200 dark:border-success-800',
-  yellow: 'bg-warning-50 dark:bg-warning-900/30 text-warning-600 dark:text-warning-400 border border-warning-200 dark:border-warning-800',
-  red: 'bg-danger-50 dark:bg-danger-900/30 text-danger-700 dark:text-danger-400 border border-danger-200 dark:border-danger-800',
-  slate: 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700',
-  purple: 'bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800',
+  blue: 'bg-primary-50 text-primary-700 border border-primary-200',
+  green: 'bg-success-50 text-success-700 border border-success-200',
+  yellow: 'bg-warning-50 text-warning-600 border border-warning-200',
+  red: 'bg-danger-50 text-danger-700 border border-danger-200',
+  slate: 'bg-slate-100 text-slate-600 border border-slate-200',
+  purple: 'bg-purple-50 text-purple-700 border border-purple-200',
 };
 
 const sizeMap = {
@@ -63,22 +63,22 @@ const variants = {
     bg-primary-600 text-white
     hover:bg-primary-700 active:bg-primary-800
     shadow-sm hover:shadow-md
-    focus-visible:ring-2 focus-visible:ring-primary-500/30 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900
+    focus-visible:ring-2 focus-visible:ring-primary-500/30 focus-visible:ring-offset-2
   `,
   secondary: `
-    bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700
-    hover:bg-slate-50 dark:hover:bg-slate-700 hover:border-slate-300 dark:hover:border-slate-600 active:bg-slate-100 dark:active:bg-slate-600
-    focus-visible:ring-2 focus-visible:ring-primary-500/20 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900
+    bg-white text-slate-700 border border-slate-200
+    hover:bg-slate-50 hover:border-slate-300 active:bg-slate-100
+    focus-visible:ring-2 focus-visible:ring-primary-500/20 focus-visible:ring-offset-2
   `,
   danger: `
     bg-danger-600 text-white
     hover:bg-danger-700 active:bg-danger-800
     shadow-sm hover:shadow-md
-    focus-visible:ring-2 focus-visible:ring-danger-500/30 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-900
+    focus-visible:ring-2 focus-visible:ring-danger-500/30 focus-visible:ring-offset-2
   `,
   ghost: `
-    text-slate-600 dark:text-slate-400
-    hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200 active:bg-slate-200 dark:active:bg-slate-700
+    text-slate-600
+    hover:bg-slate-100 hover:text-slate-800 active:bg-slate-200
     focus-visible:ring-2 focus-visible:ring-primary-500/20
   `,
 };
@@ -150,7 +150,7 @@ export function Card({
   return (
     <div
       className={`
-        bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-card
+        bg-white rounded-2xl border border-slate-100 shadow-card
         transition-all duration-200 ease-out
         ${hoverable ? 'hover:shadow-card-hover hover:-translate-y-0.5 cursor-pointer' : ''}
         ${className}
@@ -160,10 +160,10 @@ export function Card({
       tabIndex={onClick ? 0 : undefined}
     >
       {(title || headerAction) && (
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-700">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
           <div>
-            {title && <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100">{title}</h3>}
-            {subtitle && <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{subtitle}</p>}
+            {title && <h3 className="text-base font-semibold text-slate-800">{title}</h3>}
+            {subtitle && <p className="text-sm text-slate-500 mt-0.5">{subtitle}</p>}
           </div>
           {headerAction && <div>{headerAction}</div>}
         </div>
@@ -184,7 +184,7 @@ export function EmptyState({
   className = '',
 }) {
   const defaultIcon = (
-    <svg className="w-16 h-16 text-slate-300 dark:text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+    <svg className="w-16 h-16 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -195,11 +195,11 @@ export function EmptyState({
 
   return (
     <div className={`flex flex-col items-center justify-center py-16 px-6 text-center animate-fade-in ${className}`}>
-      <div className="w-20 h-20 rounded-2xl bg-slate-50 dark:bg-slate-800 flex items-center justify-center mb-5">
+      <div className="w-20 h-20 rounded-2xl bg-slate-50 flex items-center justify-center mb-5">
         {icon || defaultIcon}
       </div>
-      <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-1.5">{title}</h3>
-      <p className="text-sm text-slate-400 dark:text-slate-500 max-w-md mb-6">{description}</p>
+      <h3 className="text-lg font-semibold text-slate-700 mb-1.5">{title}</h3>
+      <p className="text-sm text-slate-400 max-w-md mb-6">{description}</p>
       {action && <div>{action}</div>}
     </div>
   );
@@ -227,12 +227,12 @@ export function FormField({
   const id = `field-${name}`;
 
   const baseInputClasses = `
-    w-full rounded-xl border bg-white dark:bg-slate-900 px-4 py-3 text-sm text-slate-800 dark:text-slate-100
-    placeholder:text-slate-400 dark:placeholder:text-slate-500
+    w-full rounded-xl border bg-white px-4 py-3 text-sm text-slate-800
+    placeholder:text-slate-400
     transition-all duration-200 ease-out
     focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500
-    disabled:bg-slate-50 dark:disabled:bg-slate-800 disabled:text-slate-400 dark:disabled:text-slate-500 disabled:cursor-not-allowed
-    ${error ? 'border-danger-500 ring-2 ring-danger-500/10' : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'}
+    disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed
+    ${error ? 'border-danger-500 ring-2 ring-danger-500/10' : 'border-slate-200 hover:border-slate-300'}
   `.trim();
 
   const renderInput = () => {
@@ -296,7 +296,7 @@ export function FormField({
               w-5 h-5 rounded-md border-2 transition-all duration-200
               peer-checked:bg-primary-500 peer-checked:border-primary-500
               peer-focus-visible:ring-2 peer-focus-visible:ring-primary-500/20
-              ${error ? 'border-danger-500' : 'border-slate-300 dark:border-slate-600 group-hover:border-slate-400 dark:group-hover:border-slate-500'}
+              ${error ? 'border-danger-500' : 'border-slate-300 group-hover:border-slate-400'}
               ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
             `}>
               <svg
@@ -310,7 +310,7 @@ export function FormField({
               </svg>
             </div>
           </div>
-          <span className={`text-sm ${disabled ? 'text-slate-400 dark:text-slate-600' : 'text-slate-700 dark:text-slate-300'}`}>
+          <span className={`text-sm ${disabled ? 'text-slate-400' : 'text-slate-700'}`}>
             {label}
             {required && <span className="text-danger-500 ml-0.5">*</span>}
           </span>
@@ -340,7 +340,7 @@ export function FormField({
       <div className={`${className}`}>
         {renderInput()}
         {error && (
-          <p id={`${id}-error`} className="mt-1.5 text-xs text-danger-600 dark:text-danger-400 animate-slide-in-up" role="alert">
+          <p id={`${id}-error`} className="mt-1.5 text-xs text-danger-600 animate-slide-in-up" role="alert">
             {error}
           </p>
         )}
@@ -350,18 +350,18 @@ export function FormField({
 
   return (
     <div className={`${className}`}>
-      <label htmlFor={id} className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+      <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1.5">
         {label}
         {required && <span className="text-danger-500 ml-0.5">*</span>}
       </label>
       {renderInput()}
       {helpText && !error && (
-        <p id={`${id}-help`} className="mt-1.5 text-xs text-slate-400 dark:text-slate-500">
+        <p id={`${id}-help`} className="mt-1.5 text-xs text-slate-400">
           {helpText}
         </p>
       )}
       {error && (
-        <p id={`${id}-error`} className="mt-1.5 text-xs text-danger-600 dark:text-danger-400 animate-slide-in-up" role="alert">
+        <p id={`${id}-error`} className="mt-1.5 text-xs text-danger-600 animate-slide-in-up" role="alert">
           {error}
         </p>
       )}
@@ -375,7 +375,7 @@ export function FormField({
 export function SkeletonLine({ className = '', width = 'w-full' }) {
   return (
     <div
-      className={`h-4 rounded-lg bg-gradient-to-r from-slate-100 dark:from-slate-800 via-slate-200 dark:via-slate-700 to-slate-100 dark:to-slate-800 bg-[length:400%_100%] animate-shimmer ${width} ${className}`}
+      className={`h-4 rounded-lg bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 bg-[length:400%_100%] animate-shimmer ${width} ${className}`}
     />
   );
 }
@@ -395,9 +395,9 @@ export function SkeletonBlock({ className = '', lines = 3 }) {
 
 export function SkeletonCard({ className = '' }) {
   return (
-    <div className={`bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 p-6 ${className}`}>
+    <div className={`bg-white rounded-2xl border border-slate-100 p-6 ${className}`}>
       <div className="flex items-center gap-4 mb-5">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-slate-100 dark:from-slate-800 via-slate-200 dark:via-slate-700 to-slate-100 dark:to-slate-800 bg-[length:400%_100%] animate-shimmer flex-shrink-0" />
+        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-slate-100 via-slate-200 to-slate-100 bg-[length:400%_100%] animate-shimmer flex-shrink-0" />
         <div className="flex-1 space-y-2">
           <SkeletonLine width="w-1/3" />
           <SkeletonLine width="w-1/2" className="h-3" />
@@ -410,8 +410,8 @@ export function SkeletonCard({ className = '' }) {
 
 export function SkeletonTable({ rows = 5, cols = 4, className = '' }) {
   return (
-    <div className={`bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden ${className}`}>
-      <div className="grid gap-4 px-6 py-4 border-b border-slate-100 dark:border-slate-700" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
+    <div className={`bg-white rounded-2xl border border-slate-100 overflow-hidden ${className}`}>
+      <div className="grid gap-4 px-6 py-4 border-b border-slate-100" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
         {Array.from({ length: cols }).map((_, i) => (
           <SkeletonLine key={i} width="w-3/4" className="h-3" />
         ))}
@@ -419,7 +419,7 @@ export function SkeletonTable({ rows = 5, cols = 4, className = '' }) {
       {Array.from({ length: rows }).map((_, rowIdx) => (
         <div
           key={rowIdx}
-          className="grid gap-4 px-6 py-4 border-b border-slate-50 dark:border-slate-800/50 last:border-b-0"
+          className="grid gap-4 px-6 py-4 border-b border-slate-50 last:border-b-0"
           style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}
         >
           {Array.from({ length: cols }).map((_, colIdx) => (
@@ -495,7 +495,7 @@ export function Modal({
     <div
       ref={overlayRef}
       onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 dark:bg-black/60 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in"
       role="dialog"
       aria-modal="true"
       aria-labelledby="modal-title"
@@ -504,17 +504,17 @@ export function Modal({
         ref={dialogRef}
         tabIndex={-1}
         className={`
-          bg-white dark:bg-slate-800 rounded-2xl shadow-modal w-full ${sizeMap[size]}
-          animate-slide-in-up outline-none border border-slate-100 dark:border-slate-700
+          bg-white rounded-2xl shadow-modal w-full ${sizeMap[size]}
+          animate-slide-in-up outline-none border border-slate-100
         `}
       >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-700">
-          <h2 id="modal-title" className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+          <h2 id="modal-title" className="text-lg font-semibold text-slate-800">
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 cursor-pointer"
+            className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600 cursor-pointer"
             aria-label="Close modal"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -526,7 +526,7 @@ export function Modal({
         <div className="px-6 py-5 max-h-[70vh] overflow-y-auto">{children}</div>
 
         {footer && (
-          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100 dark:border-slate-700">
+          <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-100">
             {footer}
           </div>
         )}
@@ -540,32 +540,32 @@ export function Modal({
 
 const iconMap = {
   success: (
-    <svg className="w-5 h-5 text-success-600 dark:text-success-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg className="w-5 h-5 text-success-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   ),
   error: (
-    <svg className="w-5 h-5 text-danger-600 dark:text-danger-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg className="w-5 h-5 text-danger-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   ),
   info: (
-    <svg className="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg className="w-5 h-5 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
     </svg>
   ),
 };
 
 const bgMap = {
-  success: 'bg-success-50 dark:bg-success-900/30 border-success-200 dark:border-success-800',
-  error: 'bg-danger-50 dark:bg-danger-900/30 border-danger-200 dark:border-danger-800',
-  info: 'bg-primary-50 dark:bg-primary-900/30 border-primary-200 dark:border-primary-800',
+  success: 'bg-success-50 border-success-200',
+  error: 'bg-danger-50 border-danger-200',
+  info: 'bg-primary-50 border-primary-200',
 };
 
 const progressMap = {
-  success: 'bg-success-500 dark:bg-success-400',
-  error: 'bg-danger-500 dark:bg-danger-400',
-  info: 'bg-primary-500 dark:bg-primary-400',
+  success: 'bg-success-500',
+  error: 'bg-danger-500',
+  info: 'bg-primary-500',
 };
 
 function ToastItem({ toast, onRemove }) {
@@ -599,21 +599,21 @@ function ToastItem({ toast, onRemove }) {
       <div className="flex items-start gap-3 p-4">
         <div className="flex-shrink-0 mt-0.5">{iconMap[toast.type] || iconMap.info}</div>
         <div className="flex-1 min-w-0">
-          {toast.title && <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">{toast.title}</p>}
-          {toast.message && <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">{toast.message}</p>}
+          {toast.title && <p className="text-sm font-semibold text-slate-800">{toast.title}</p>}
+          {toast.message && <p className="text-sm text-slate-600 mt-0.5">{toast.message}</p>}
         </div>
         <button
           onClick={handleClose}
-          className="flex-shrink-0 p-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
+          className="flex-shrink-0 p-1 rounded-lg hover:bg-black/5 transition-colors cursor-pointer"
           aria-label="Dismiss notification"
         >
-          <svg className="w-4 h-4 text-slate-400 dark:text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
       {toast.duration > 0 && (
-        <div className="h-0.5 w-full bg-black/5 dark:bg-white/10">
+        <div className="h-0.5 w-full bg-black/5">
           <div
             className={`h-full ${progressMap[toast.type] || progressMap.info} opacity-40`}
             style={{ animation: `toast-progress ${toast.duration}ms linear forwards` }}
