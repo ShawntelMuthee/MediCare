@@ -62,8 +62,8 @@ export default function Sidebar({ isOpen, onClose }) {
       {/* Sidebar */}
       <aside
         className={`
-          fixed top-0 left-0 z-50 h-full w-72
-          bg-white/95 backdrop-blur-xl border-r border-slate-100 shadow-sidebar
+          fixed top-0 left-0 z-50 h-full w-[260px]
+          bg-[#f8f7f2] border-r border-slate-200/80 shadow-sidebar
           flex flex-col
           transition-transform duration-300 ease-out
           lg:translate-x-0 lg:static lg:z-auto
@@ -71,15 +71,15 @@ export default function Sidebar({ isOpen, onClose }) {
         `}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-6 py-6 border-b border-slate-100">
+        <div className="flex items-center gap-3 px-6 py-7 border-b border-slate-200/80">
           <img 
             src="/assets/medicare_logo.svg" 
             alt="MediCare Logo" 
-            className="w-10 h-10 rounded-xl shadow-sm"
+            className="w-9 h-9 rounded-lg"
           />
           <div>
-            <h1 className="text-lg font-bold text-slate-800 tracking-tight">MediCare</h1>
-            <p className="text-xs text-slate-400 font-medium">Patient Management</p>
+            <h1 className="text-[17px] font-bold text-slate-900 tracking-[-0.04em]">MediCare</h1>
+            <p className="text-[10px] uppercase tracking-[0.14em] text-slate-400 font-bold">Clinical workspace</p>
           </div>
           {/* Mobile close button */}
           <button
@@ -94,8 +94,9 @@ export default function Sidebar({ isOpen, onClose }) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 overflow-y-auto">
-          <div className="space-y-1">
+        <nav className="flex-1 px-4 py-7 overflow-y-auto">
+          <p className="px-3 mb-3 text-[10px] uppercase tracking-[0.18em] font-bold text-slate-400">Workspace</p>
+          <div className="space-y-1.5">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
@@ -103,21 +104,21 @@ export default function Sidebar({ isOpen, onClose }) {
                 end={item.to === '/'}
                 onClick={onClose}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group ${
+                    `flex items-center gap-3 border-l-2 px-3 py-3 text-[13px] font-semibold transition-all duration-200 group ${
                     isActive
-                      ? 'bg-primary-50 text-primary-700 shadow-sm'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-slate-800'
+                      ? 'border-primary-500 text-primary-800 pl-[10px]'
+                      : 'border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-900'
                   }`
                 }
               >
                 {({ isActive }) => (
                   <>
-                    <span className={`flex-shrink-0 transition-colors ${isActive ? 'text-primary-600' : 'text-slate-400 group-hover:text-slate-500'}`}>
+                    <span className={`flex-shrink-0 transition-colors ${isActive ? 'text-primary-600' : 'text-slate-400 group-hover:text-slate-600'}`}>
                       {item.icon}
                     </span>
                     <span>{item.label}</span>
                     {isActive && (
-                      <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary-500" />
+                      <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary-500" aria-hidden="true" />
                     )}
                   </>
                 )}
@@ -127,9 +128,9 @@ export default function Sidebar({ isOpen, onClose }) {
         </nav>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-slate-100">
-          <p className="text-xs text-slate-400 text-center">
-            Intellisoft MediCare v1.0
+        <div className="px-6 py-5 border-t border-slate-200/80">
+          <p className="text-[10px] uppercase tracking-[0.15em] text-slate-400 text-center">
+            Intellisoft MediCare / 01
           </p>
         </div>
       </aside>

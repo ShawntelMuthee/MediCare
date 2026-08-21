@@ -58,7 +58,7 @@ export default function PatientProfile({ toast }) {
   ].sort((a, b) => new Date(b.visitDate) - new Date(a.visitDate));
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-8">
       {/* Header Actions */}
       <div className="flex items-center gap-4">
         <button 
@@ -69,12 +69,15 @@ export default function PatientProfile({ toast }) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
         </button>
-        <h2 className="text-xl font-bold text-slate-800 dark:text-white">Patient Profile</h2>
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.18em] text-primary-600 font-bold">Patient workspace</p>
+          <h2 className="text-xl font-bold tracking-[-0.03em] text-slate-900 dark:text-white">Patient profile</h2>
+        </div>
       </div>
 
       {/* Patient Info Card */}
       <Card className="relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary-500/10 to-transparent rounded-bl-full -mr-16 -mt-16 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-72 h-72 bg-primary-50/80 rounded-bl-full -mr-20 -mt-20 pointer-events-none" />
         
         <div className="flex flex-col md:flex-row gap-6 items-start md:items-center relative z-10">
           <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary-100 to-primary-50 dark:from-primary-900/50 dark:to-primary-800/30 flex items-center justify-center border-4 border-white dark:border-slate-800 shadow-sm flex-shrink-0">
@@ -84,7 +87,7 @@ export default function PatientProfile({ toast }) {
           </div>
           
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold text-slate-800 dark:text-white truncate">
+            <h1 className="display-serif text-4xl font-semibold text-slate-900 dark:text-white truncate">
               {patient.firstName} {patient.lastName}
             </h1>
             <div className="mt-2 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-600 dark:text-slate-400">

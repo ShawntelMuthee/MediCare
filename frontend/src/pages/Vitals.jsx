@@ -132,9 +132,14 @@ export default function Vitals({ toast }) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-8">
+      <div>
+        <p className="text-[10px] uppercase tracking-[0.2em] text-primary-600 font-bold mb-3">Clinical record / measurements</p>
+        <h1 className="display-serif text-4xl sm:text-5xl text-slate-900">A precise picture of today.</h1>
+        <p className="text-sm text-slate-500 mt-3">Capture the measurements that shape the next clinical decision.</p>
+      </div>
       {/* Vitals Form */}
-      <Card title="Record Vitals" subtitle="Enter height and weight to calculate BMI">
+      <Card title="Record vitals" subtitle="Enter height and weight to calculate BMI">
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <FormField
@@ -174,10 +179,10 @@ export default function Vitals({ toast }) {
             {/* Live BMI Display */}
             <div className="flex items-end">
               {liveBmi && (
-                <div className="w-full rounded-xl bg-slate-50 border border-slate-100 px-4 py-3 animate-fade-in">
-                  <p className="text-xs text-slate-400 mb-1 font-medium">Calculated BMI</p>
+                <div className="w-full rounded-[4px] bg-primary-50 border border-primary-100 px-4 py-3 animate-fade-in">
+                  <p className="text-[10px] uppercase tracking-[0.14em] text-primary-600 mb-1 font-bold">Calculated BMI</p>
                   <div className="flex items-center gap-2">
-                    <span className="text-2xl font-bold text-slate-800">{liveBmi}</span>
+                    <span className="text-3xl font-semibold tracking-[-0.05em] text-slate-900">{liveBmi}</span>
                     <Badge color={getBmiColor(parseFloat(liveBmi))} dot>
                       {getBmiLabel(parseFloat(liveBmi))}
                     </Badge>

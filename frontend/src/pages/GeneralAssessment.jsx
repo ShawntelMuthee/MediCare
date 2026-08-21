@@ -95,8 +95,13 @@ export default function GeneralAssessment({ toast }) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <Card title="General Assessment" subtitle="Record details for a general assessment">
+    <div className="max-w-3xl mx-auto space-y-8">
+      <div>
+        <p className="text-[10px] uppercase tracking-[0.2em] text-primary-600 font-bold mb-3">Clinical record / general</p>
+        <h1 className="display-serif text-4xl sm:text-5xl text-slate-900">Make space for context.</h1>
+        <p className="text-sm text-slate-500 mt-3">Record the wider picture around a patient's current health.</p>
+      </div>
+      <Card title="General assessment" subtitle="Record details for a general assessment">
         <form onSubmit={handleSubmit(onSubmit)} noValidate>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <FormField

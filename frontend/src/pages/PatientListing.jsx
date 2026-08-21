@@ -42,8 +42,9 @@ export default function PatientListing({ toast }) {
   const filteredPatients = useMemo(() => {
     return patients.filter((patient) => {
       // Name Search
-      const fullName = `${patient.firstName} ${patient.lastName}`.toLowerCase();
-      const matchesSearch = fullName.includes(search.toLowerCase());
+      const searchTerm = search.trim().toLowerCase();
+      const searchableText = `${patient.firstName} ${patient.lastName} ${patient.gender || ''}`.toLowerCase();
+      const matchesSearch = searchableText.includes(searchTerm);
 
       // Visit Date Filter
       let matchesDate = true;
@@ -112,11 +113,12 @@ export default function PatientListing({ toast }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold text-slate-800">Patients Dashboard</h2>
-          <p className="text-sm text-slate-500 mt-1">Manage and view all registered patients.</p>
+          <p className="text-[11px] uppercase tracking-[0.18em] text-primary-600 font-bold mb-3">Patient registry / today</p>
+          <h2 className="display-serif text-4xl sm:text-5xl text-slate-900">A clearer view of care.</h2>
+          <p className="text-sm text-slate-500 mt-2">Manage and view all registered patients.</p>
         </div>
         <Button onClick={() => navigate('/register')} icon={
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -128,8 +130,8 @@ export default function PatientListing({ toast }) {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="flex items-center gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-slate-200/80 border border-slate-200/80 rounded-[14px] overflow-hidden">
+        <Card className="flex items-center gap-4 rounded-none border-0 shadow-none">
           <div className="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center text-primary-600">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -141,7 +143,7 @@ export default function PatientListing({ toast }) {
           </div>
         </Card>
         
-        <Card className="flex items-center gap-4">
+        <Card className="flex items-center gap-4 rounded-none border-0 shadow-none">
           <div className="w-12 h-12 rounded-full bg-success-50 flex items-center justify-center text-success-600">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
@@ -153,7 +155,7 @@ export default function PatientListing({ toast }) {
           </div>
         </Card>
         
-        <Card className="flex items-center gap-4">
+        <Card className="flex items-center gap-4 rounded-none border-0 shadow-none">
           <div className="w-12 h-12 rounded-full bg-warning-50 flex items-center justify-center text-warning-600">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -165,7 +167,7 @@ export default function PatientListing({ toast }) {
           </div>
         </Card>
         
-        <Card className="flex items-center gap-4">
+        <Card className="flex items-center gap-4 rounded-none border-0 shadow-none">
           <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -179,7 +181,7 @@ export default function PatientListing({ toast }) {
       </div>
 
       <Card padding={false}>
-        <div className="p-4 sm:p-6 border-b border-slate-100 flex flex-col sm:flex-row gap-4 bg-slate-50/50 rounded-t-2xl">
+        <div className="p-5 sm:p-6 border-b border-slate-200/80 flex flex-col sm:flex-row gap-4 bg-[#fbfaf7] rounded-t-[14px]">
           <div className="flex-1">
             <FormField
               label="Search Patients"
@@ -187,8 +189,22 @@ export default function PatientListing({ toast }) {
               placeholder="Search by name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full max-w-sm"
+              className="relative w-full max-w-sm"
+              autoComplete="off"
+              aria-label="Search patients by name or gender"
             />
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch('')}
+                className="absolute right-3 bottom-3 text-slate-400 hover:text-slate-700 transition-colors"
+                aria-label="Clear patient search"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            )}
           </div>
           <div>
             <FormField
@@ -216,24 +232,24 @@ export default function PatientListing({ toast }) {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 border-b border-slate-100">
+              <thead className="bg-[#fbfaf7] border-b border-slate-200/80">
                 <tr>
-                  <th className="text-left font-semibold text-slate-600 px-6 py-4">Patient Name</th>
-                  <th className="text-left font-semibold text-slate-600 px-6 py-4">Age</th>
-                  <th className="text-left font-semibold text-slate-600 px-6 py-4">Registration Date</th>
-                  <th className="text-left font-semibold text-slate-600 px-6 py-4">Last Visit</th>
-                  <th className="text-left font-semibold text-slate-600 px-6 py-4">BMI Status</th>
-                  <th className="text-right font-semibold text-slate-600 px-6 py-4">Actions</th>
+                  <th className="text-left text-[10px] uppercase tracking-[0.14em] font-bold text-slate-400 px-6 py-4">Patient</th>
+                  <th className="text-left text-[10px] uppercase tracking-[0.14em] font-bold text-slate-400 px-6 py-4">Age</th>
+                  <th className="text-left text-[10px] uppercase tracking-[0.14em] font-bold text-slate-400 px-6 py-4">Registered</th>
+                  <th className="text-left text-[10px] uppercase tracking-[0.14em] font-bold text-slate-400 px-6 py-4">Last visit</th>
+                  <th className="text-left text-[10px] uppercase tracking-[0.14em] font-bold text-slate-400 px-6 py-4">BMI status</th>
+                  <th className="text-right text-[10px] uppercase tracking-[0.14em] font-bold text-slate-400 px-6 py-4">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {currentPatients.map((patient) => {
                   const lastVital = patient.vitals && patient.vitals.length > 0 ? patient.vitals[0] : null;
                   return (
-                    <tr key={patient.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors last:border-b-0 group">
+                    <tr key={patient.id} className="border-b border-slate-100 hover:bg-primary-50/30 transition-colors last:border-b-0 group">
                       <td className="px-6 py-4">
-                        <div className="font-medium text-slate-800">{patient.firstName} {patient.lastName}</div>
-                        <div className="text-xs text-slate-400 mt-0.5">{patient.gender}</div>
+                        <div className="font-bold text-slate-900">{patient.firstName} {patient.lastName}</div>
+                        <div className="text-[11px] text-slate-400 mt-1 uppercase tracking-[0.08em]">{patient.gender}</div>
                       </td>
                       <td className="px-6 py-4 text-slate-600">
                         {calculateAge(patient.dateOfBirth)} yrs
@@ -254,8 +270,11 @@ export default function PatientListing({ toast }) {
                         )}
                       </td>
                       <td className="px-6 py-4 text-right">
-                        <Button variant="ghost" size="sm" onClick={() => navigate(`/patients/${patient.id}`)}>
-                          View Profile
+                        <Button variant="ghost" size="sm" onClick={() => navigate(`/patients/${patient.id}`)} className="group/profile">
+                          <span>View profile</span>
+                          <svg className="w-4 h-4 opacity-0 -translate-x-1 group-hover/profile:opacity-100 group-hover/profile:translate-x-0 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8} aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14m-6-6 6 6-6 6" />
+                          </svg>
                         </Button>
                       </td>
                     </tr>

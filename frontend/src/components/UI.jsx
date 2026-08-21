@@ -27,7 +27,7 @@ export function Badge({
   return (
     <span
       className={`
-        inline-flex items-center gap-1.5 font-medium rounded-full
+        inline-flex items-center gap-1.5 font-semibold rounded-full tracking-[0.01em]
         ${colorMap[color] || colorMap.blue}
         ${sizeMap[size] || sizeMap.md}
         ${className}
@@ -84,9 +84,9 @@ const variants = {
 };
 
 const sizes = {
-  sm: 'px-3 py-1.5 text-xs rounded-lg gap-1.5',
-  md: 'px-4 py-2.5 text-sm rounded-xl gap-2',
-  lg: 'px-6 py-3 text-base rounded-xl gap-2.5',
+  sm: 'px-3 py-1.5 text-xs rounded-md gap-1.5',
+  md: 'px-4 py-2.5 text-sm rounded-md gap-2',
+  lg: 'px-6 py-3 text-base rounded-md gap-2.5',
 };
 
 export function Button({
@@ -150,7 +150,7 @@ export function Card({
   return (
     <div
       className={`
-        bg-white rounded-2xl border border-slate-100 shadow-card
+        bg-white rounded-[4px] border border-slate-200/80 shadow-card
         transition-all duration-200 ease-out
         ${hoverable ? 'hover:shadow-card-hover hover:-translate-y-0.5 cursor-pointer' : ''}
         ${className}
@@ -160,10 +160,10 @@ export function Card({
       tabIndex={onClick ? 0 : undefined}
     >
       {(title || headerAction) && (
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-slate-200/80">
           <div>
-            {title && <h3 className="text-base font-semibold text-slate-800">{title}</h3>}
-            {subtitle && <p className="text-sm text-slate-500 mt-0.5">{subtitle}</p>}
+            {title && <h3 className="text-[15px] font-bold tracking-[-0.02em] text-slate-900">{title}</h3>}
+            {subtitle && <p className="text-xs text-slate-500 mt-1">{subtitle}</p>}
           </div>
           {headerAction && <div>{headerAction}</div>}
         </div>
@@ -227,12 +227,13 @@ export function FormField({
   const id = `field-${name}`;
 
   const baseInputClasses = `
-    w-full rounded-xl border bg-white px-4 py-3 text-sm text-slate-800
+    w-full rounded-md border bg-white px-4 py-3 text-sm text-slate-800
     placeholder:text-slate-400
     transition-all duration-200 ease-out
-    focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500
+    focus:outline-none focus:ring-2 focus:ring-primary-500/15 focus:border-primary-500
     disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed
     ${error ? 'border-danger-500 ring-2 ring-danger-500/10' : 'border-slate-200 hover:border-slate-300'}
+    ${type === 'date' ? 'date-field' : ''}
   `.trim();
 
   const renderInput = () => {
@@ -350,7 +351,7 @@ export function FormField({
 
   return (
     <div className={`${className}`}>
-      <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1.5">
+      <label htmlFor={id} className="block text-[11px] uppercase tracking-[0.12em] font-bold text-slate-500 mb-2">
         {label}
         {required && <span className="text-danger-500 ml-0.5">*</span>}
       </label>
